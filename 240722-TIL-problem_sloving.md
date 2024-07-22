@@ -103,3 +103,50 @@ def reverse_string(word):
 result = reverse_string("Hello, World!")
 print(result)  # !dlroW ,olleH
 ```
+
+<br>
+
+### ✔ 실습 시 `새로 배운 점`
+---
+#### 리스트 `반복문`과 `pop()` 사용 시 주의점
+``` python
+def even_elements(ex_list):
+    result = []
+    # for ex in ex_list:
+    #     if ex % 2 == 1:
+    #         ex_index = ex_list.index(ex)
+    #         ex_list.pop(ex_index)
+    #     else:
+    #         continue
+    # result.extend(ex_list)
+    # return result
+
+    # ▲ 위처럼 풀이 시 기존에 for문이 입력받은 len의 값에 변동 생겨 오류 발생
+
+
+    # ▼ while문 활용이 권장되는 문제
+
+    new_list = []
+    while len(ex_list) > 0:
+        ex = ex_list.pop(0)
+        if ex % 2 == 0:
+            new_list.extend([ex]) # extend는 리스트를 받아야 하므로 []화
+        else:
+            continue
+    return new_list
+
+
+    # ▼ for문과 인덱싱을 활용해서 풀이하는 방법
+    # def even_elements(input_list):
+    #     for _ in range(len(input_list)):
+    # # range(len(list))로 해결 시 범주가 고정적으로 주어지므로 문제 X
+    #         i = input_list.pop(0)
+    #         if i % 2 == 0:
+    #             input_list.extend([i])
+    #     return input_list
+
+    
+my_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+result = even_elements(my_list)
+print(result)
+```
