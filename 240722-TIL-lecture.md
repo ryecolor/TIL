@@ -407,3 +407,9 @@ print("'Ⅳ'.isnumeric():", 'Ⅳ'.isnumeric())
 print("'½'.isnumeric():", '½'.isnumeric())
 print("'²'.isnumeric():", '²'.isnumeric())
 ```
+
+<br>
+
+### 참고 링크
+---
+[5. Data Structures - Python 3.9.19 documentation](https://docs.python.org/3.9/tutorial/datastructures.html#data-structures)
