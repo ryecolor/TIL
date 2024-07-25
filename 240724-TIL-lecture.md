@@ -174,9 +174,8 @@ yejin.attribute
 ```
 
 <br>
+<br>
 
-### ✔ 해시 테이블 `Hash Table`
----
 > 클래스 구성 요소
 
 - 클래스 구조
@@ -237,152 +236,190 @@ yejin.attribute
 
 - 인스턴스의 상태를 조작하거나 동작을 수행
 
-- 데이터를 효율적으로 저장하고 검색하기 위해 사용
+- 구조
 
-<br> ----------- 여기부터 수정
+  - 반드시 첫 번째 매개변수로 `인스턴스 자신(self)`을 전달받음
+  
+  - self는 매개변수 이름일 뿐이며 다른 이름으로 설정 가능하나, 그대로 사용할 것을 강력히 권장
 
-> 해시 테이블 원리
-- `해시 함수`를 통해 `키`를 `해시 값`으로 변환하고, 이 해시 값을 `인덱스`로 사용하여 데이터를 저장하거나 검색
-- 파이썬 환경이 바뀌며 해시 함수를 재구성할 때마다 `값이 바뀜`
-
-<br>
-
-> 해시 (Hash)
-- 임의의 크기를 가진 데이터(key)를 고정된 크기의 `고유한 값(index, 색인)`으로 변환하는 것
-- 데이터를 고유하게 식별하는 일종의 `지문`과 같은 역할 수행
-- 파이썬에서는 해시 함수를 사용하여 데이터를 `정수` 형태의 해시 값으로 변환
-
-<br>
-
-> 해시 함수 (Hash function)
-- 임의의 길이의 데이터를 입력받아 고정된 길이의 `임의의 데이터(해시 값)`를 출력하는 함수
-  - 주로 해시 테이블 자료 구조에 사용
-  - 매우 빠른 데이터 검색을 위한 컴퓨터 소프트웨어에서 유용하게 사용
+  ``` python
+  class MyClass:
+    # (def __init__ 생략)
+    def instance_method(self, arg1, ...):
+      # self = 인스턴스 메서드를 호출할 인스턴스 자신
+      pass
+  ```
 
 <br>
 
-> `set의 요소` & `dictionary의 키`와 `해시 테이블`의 관계
-- 파이썬에서 set의 요소와 dictionary의 키는 해시 테이블을 이용하여 중복되지 않는 고유한 값을 저장
-- `세트 내의 각 요소`
-  - 해시 함수를 통해 해시 값으로 변환되고, 이 해시 값을 기반으로 해시 테이블에 저장
-- `딕셔너리의 키`
-  - 키는 고유해야 하므로, 키를 해시 함수를 통해 해시 값으로 변환하여 해시 테이블에 저장
-  - 딕셔너리의 키는 매우 빠른 탐색 속도를 제공하며, 중복된 값을 허용하지 않음
+- `self` 동작 원리
+
+  - `'hello'.upper()` == `str.upper('hello')`
+
+  ``` python
+   upper 메서드를 사용해 문자열 'hello'를 대문자로 변경하는 'hello'.upper()는 str.upper('hello')를 객체 지향 방식의 메서드로 단축하여 호출하는 표현이다.
+
+   실제 파이썬 내부 동작의 진행 방식을 살펴보면 str 클래스가 upper 메서드를 호출하여 첫 번째 인자로 문자열 인스턴스를 입력한 것과 같다. 문자열 객체가 단순히 어딘가의 함수로 들어가는 인자로 활용되는 내부 방식보다, 앞선 단축형 호출은 '객체 스스로 메서드를 호출하여 코드를 동작시키는 객체 지향적인 표현'이다.
+  ```
 
 <br>
 
-> 파이썬에서의 해시 함수
-- 파이썬에서 해시 함수의 동작 방식은 `객체의 타입`에 따라 달라짐
-- 정수와 문자열은 서로 다른 타입이며, 이들의 해시 값을 계산하는 방식도 다름
-- `정수`
-  - 같은 정수는 항상 `같은 해시 값`을 가짐
-  - 해시 테이블에 정수를 저장할 떄 효율적인 방법
-  - 예를 들어, hash(1)과 hash(2)는 항상 서로 다른 해시 값을 갖지만, hash(1)은 항상 동일한 해시 값을 갖게 됨
-  - 따라서 파이썬을 여러 번 재실행해도 정수는 같은 해시 값과 순서를 보임
-  - 그러나 set, dictionary에 정수만 존재해도 순서가 있다고 볼 수 없음
+- 생성자 메서드 `Constructor Methods`
 
-- `문자열`
-  - 문자열은 `가변적`인 길이를 갖고 있음
-  - 문자열에 포함된 각 문자들의 유니코드 코드 포인트 등을 기반으로 해시 값 계산
-  - 이로 인해 문자열의 해시 값은 실행 시마다 다르게 계산됨
+  - 인스턴스 메서드 중 하나
+
+  - 인스턴스 객체가 생성될 때 자동으로 호출되는 메서드
+
+  - 인스턴스 변수들의 초기 값을 설정
+
+  ``` python
+  class Person:
+    def __init__(self, name): # 생성자 메서드
+        self.name = name
+        print('인스턴스가 생성되었습니다.')
+
+    def greeting(self):
+        print(f'안녕하세요. {self.name}입니다.')
+
+  person1 = Person('지민') # 인스턴스가 생성되었습니다.
+  person1.greeting() # 안녕하세요. 지민입니다.
+  ```
 
 <br>
+<br>
+
+### ✔ 클래스 메서드 `Class Methods`
+---
+
+- 핵심 요약
+
+> Doesn't need self parameter
+
+> Need cls as parameter
+
+> Need decorator @classmethod
+
+> Can be accessed directly through the class. Don't need instance of class.
 
 ---
 
-### 정수와 문자열의 `해시 함수 영향` 예시
+<br>
+
+- 클래스가 호출하는 메서드
+
+- 클래스 변수를 조작하거나 클래스 레벨의 동작을 수행
+
+- 구조
+
+  - `@classmethod` 데코레이터를 사용하여 정의
+
+  - 호출 시, 첫 번째 인자로 `해당 메서드를 호출하는 클래스(cls)`​가 전달됨
+
+  - cls는 매개변수 이름일 뿐이며 다른 이름으로 설정 가능하나, 그대로 사용할 것을 강력히 권장
+
+  ``` python
+  class Person:
+    count = 0
+
+    def __init__(self, name):
+        self.name = name
+        Person.count += 1
+
+    @classmethod # 메서드 정의
+    def number_of_population(cls):
+        print(f'인구 수는 {cls.count}입니다.')
+
+  person1 = Person('iu')
+  person2 = Person('BTS')
+
+  # 인구 수는 2입니다. # 메서드 실행 결과
+  Person.number_of_population() # 메서드 실행
+  ```
+
+<br>
+<br>
+
+### ✔ 스태틱(정적) 메서드 `Static Methods`
 ---
+
+- 핵심 요약
+
+> Doesn't need self parameter
+
+> Doesn't need self or cls as parameter
+
+> Need decorator @staticmethod
+
+> Can only access variables passed as argument.
+
+> Static method cannot be accessed through class or it's instance.
+
+---
+
+<br>
+
+- 클래스와 인스턴스와 상관없이 `독립적으로 동작`하는 메서드
+
+- 주로 클래스와 관련이 있지만 인스턴스와 `상호작용이 필요하지 않은 경우`에 사용
+
+- 구조
+
+  - `@staticmethod` 데코레이터를 사용하여 정의
+
+  - 호출 시 필수적으로 작성해야 할 매개변수가 없음
+
+  - 즉, 객체 상태나 클래스 상태를 수정할 수 없으며 `단지 기능(행동)만을 위해 사용`
+
+    - 단순히 문자열을 조작하는 기능을 제공하는 메서드 예시
+
+    ``` python
+    class StringUtils:
+    @staticmethod
+    def reverse_string(string):
+        return string[::-1]
+
+    @staticmethod
+    def capitalize_string(string):
+        return string.capitalize()
+
+    text = 'hello, world'
+
+    reversed_text = StringUtils.reverse_string(text)
+    print(reversed_text) # dlrow ,olleh
+
+    capitalized_text = StringUtils.capitalize_string(text)
+    print(capitalized_text) # Hello, world
+    ```
+
+<br>
+<br>
+
+### ✔ 메서드 정리
+---
+
+> 인스턴스 메서드
+- 인스턴스의 상태를 변경하거나, 해당 인스턴스의 특정 동작을 수행
+
+> 클래스 메서드
+- 인스턴스의 상태에 의존하지 않는 기능을 정의
+- 클래스 변수를 조작하거나 클래스 레벨의 동작을 수행
+
+> 스태틱 메서드
+- 클래스 및 인스턴스와 관련이 없는 일반적인 기능을 수행
+
+<br>
+
+> 누가 어떤 메서드를 사용해야 할까?
+- 클래스
+  - 클래스 메서드
+  - 스태틱 메서드
+
+- 인스턴스
+  - 인스턴스 메서드
+
 ``` python
-# 정수
-my_set = {3, 2, 1, 9, 100, 4, 87, 39, 10, 52}
-print(my_set.pop())
-print(my_set.pop())
-print(my_set.pop())
-print(my_set.pop())
-print(my_set.pop())
-print(my_set.pop())
-print(my_set.pop())
-print(my_set.pop())
-print(my_set.pop())
-print(my_set.pop())
-print(my_set)
-
-
-# 문자열
-my_str_set = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'}
-print(my_str_set.pop())
-print(my_str_set.pop())
-print(my_str_set.pop())
-print(my_str_set.pop())
-print(my_str_set.pop())
-
-print(hash(1))
-print(hash(1))
-print(hash('a'))
-print(hash('a'))
-
-print(hash(1))
-print(hash(1.0))
-print(hash('1'))
-print(hash((1, 2, 3)))
+클래스와 인스턴스 둘 다 '모든 메서드를 호출 가능'하다. 그러나 각자의 메서드는 OOP 패러다임에 따라 명확한 목적에 따라 설계된 것이기 때문에 클래스와 인스턴스 각각 올바른 메서드만 사용해야 한다.'할 수 있다 != 써도 된다'임을 기억하자.
 ```
-<br>
-
-> `set의 pop() 메서드`의 결과와 `해시 테이블`의 관계
-- set의 pop()에서 임의의 요소를 제거하고 반환
-- 실행할 때마다 다른 요소를 얻는다는 의미에서의 무작위가 아니라 `임의`라는 의미에서 무작위
-  - By "arbitrary" the docs don't mean "random" - python 공식 문서
-- 해시 테이블에 나타나는 순서대로 반환하는 것
-- `해시 테이블의 순서와 자료 구조상의 순서​를 동일시하면 안 됨`
-
-<br>
-
-> `hashable`
-- hash() 함수의 인자로 전달해서 결과를 반환받을 수 있는 객체
-- **대부분의** 불변형 데이터 타입은 hashable
-- 단, tuple의 경우 불변형이지만 해시 불가능한 객체를 참조할 때는 tuple 자체의 해시도 불가능
-
-<br>
-
-> `hashable`과 `불변성` 간의 관계
-- 해시 테이블의 키는 `불변`해야 함 (객체 생성 후 값의 변경이 불가해야 함)
-- 불변 객체는 해시 값이 변하지 않으므로 동일한 값에 대해 일관된 해시 값 유지 가능
-- 단, hash 가능하다 `!=` 불변하다
-
-<br>
-
-> `가변형` 객체가 `hashable`하지 않은 이유
-- 해시 테이블의 `무결성 유지 불가`
-  - 값이 변경될 수 있기 때문에 동일한 객체에 대한 해시 값이 변경될 가능성 존재
-- 해시 값의 `일관성 유지 불가`
-  - 가변형 객체가 변경되면 해시 값이 변경되기 때문에, 같은 객체에 대한 서로 다른 해시 값이 반환될 수 있음
-
-<br>
-
-``` python
-TypeError: unhashable type: 'list'
-print(hash((1, 2, [3, 4])))
-TypeError: unhashable type: 'list'
-print(hash([1, 2, 3]))
-TypeError: unhashable type: 'list'
-my_set = {[1, 2, 3], 1, 2, 3, 4, 5}
-TypeError: unhashable type: 'set'
-my_dict = {{3, 2}: 'a'}
-
-# 전체 에러 발생
-```
-
-<br>
-
-> `hashable` 객체가 필요한 이유
-1. `해시 테이블 기반 자료 구조` 사용
-   - set의 요소와 dict의 key
-   - 중복 값 방지
-   - 빠른 검색과 조회
-
-2. `불변성`을 통한 일관된 해시 값
-
-3. `안전성`과 `예측 가능성` 유지
 
 <br>
 <br>
@@ -390,18 +427,123 @@ my_dict = {{3, 2}: 'a'}
 ### 5) 보조 메서드 : `매직 메서드` `데코레이터`
 ---
 
-- `BNF(Backus-Naur Form)`
-  - 프로그래밍 언어의 문법을 표현하기 위한 표기법
+> 인스턴스와 클래스 간 `이름공간`
 
-- `EBNF(Extended Backus-Naur Form)`
-  - BNF를 확장한 표기법
-  - `메타 기호`를 추가하여 더 간결하고 표현력이 강해진 형태
-  - 서로 다른 프로그래밍 언어, 데이터 형식, 프로토콜 등의 문법을 통일하여 정의하기 위해 사용
+- 클래스를 정의하면, 클래스와 해당하는 이름공간 생성
 
+- 인스턴스를 만들면, 인스턴스 객체가 생성되고 `독립적인 이름공간` 생성
 
-<br>
-<br>
+- 인스턴스에서 특정 속성에 접근하면, `인스턴스 → 클래스` 순으로 탐색
 
-### 참고 링크
 ---
-[More Dictionary Method - Python 3.9.19 documentation](https://docs.python.org/3/library/stdtypes.html#dict)
+
+![image](https://postfiles.pstatic.net/MjAyNDA3MjNfMjM5/MDAxNzIxNzM1OTE3MzA0.b-jA3rqpVVax106tel-mTAK16AokjU5UFlc-jxyn5rAg.uqjgS2nOm6atL7omfNsZCg4thclfUyF54f7iBwodC_cg.PNG/image.png?type=w773)
+
+---
+
+``` python
+class Person:
+    name = 'unknown'
+
+    def talk(self):
+        print(self.name)
+
+p1 = Person()
+p1.talk() # unknown
+# 인스턴스 변수가 정의되어 있지 않아 클래스 변수 unknown이 출력됨
+
+# p2 인스턴스 변수 설정 전/후
+p2 = Person()
+p2.talk() # unknown
+p2.name = 'Kim'
+p2.talk() # Kim
+# 인스턴스 변수가 정의되어 인스턴스 변수 Kim이 출력됨
+
+print(Person.name) # unknown
+print(p1.name) # unknown
+print(p2.name) # Kim
+# 클래스 변수 name 값이 Kim으로 변경된 것이 아님
+# p2 인스턴스의 인스턴스 변수 name이 Kim으로 저장됨
+```
+
+<br>
+
+> 독립적인 이름공간을 가지는 `이점`
+
+- 각 인스턴스는 독립적인 메모리 공간을 가지며, 클래스와 다른 인스턴스 간에는 서로의 데이터나 상태에 `직접적인 접근이 불가능`
+
+- 객체 지향 프로그래밍의 중요한 특성 중 하나로, 클래스와 인스턴스를 모듈화하고 각각의 객체가 독립적으로 동작하도록 보장
+
+- 이를 통해 클래스와 인스턴스는 다른 객체들과의 상호작용에서 서로 충돌이나 영향을 주지 않으면서 독립적으로 동작할 수 있음
+
+- 코드의 가독성, 유지 보수성, 재사용성을 높이는 것에 도움을 줌
+
+<br>
+
+<br>
+
+### ✔ 매직 메서드 `Magic Methods`
+---
+
+- 인스턴스 메서드 중 하나로, 특정 상황에 `자동으로 호출`되는 메서드
+
+- `Double underscore(__)`가 있는 메서드는 특수한 동작을 위해 만들어진 메서드
+
+- 스페셜 메서드 혹은 매직 메서드라고 불림
+
+- 종류
+
+  - __str__(self)
+  - __len__(self)
+  - __lt__(self, other)
+  - __le__(self, other)
+  - __eq__(self, other)
+  - __gt__(self, other)
+  - __ge__(self, other)
+  - __ne__(self, other)
+  - ...
+
+<br>
+
+### ✔ 데코레이터 `Decorator`
+---
+
+- 다른 함수의 코드를 유지한 채로 수정하거나 확장하기 위해 사용되는 함수
+
+- `Double underscore(__)`가 있는 메서드는 특수한 동작을 위해 만들어진 메서드
+
+- 데코레이터 정의
+
+``` python
+def my_decorator(func):
+    def wrapper():
+        # 함수 실행 전에 수행할 작업
+        print('함수 실행 전')
+        # 원본 함수 호출
+        result = func()
+        # 함수 실행 후에 수행할 작업
+        print('함수 실행 후')
+        return result
+    return wrapper
+```
+
+<br>
+
+- 데코레이터 사용
+
+``` python
+@my_decorator
+def my_function():
+    print('원본 함수 실행')
+
+my_function()
+```
+
+<br>
+<br>
+
+### "`절차 지향`과 `객체 지향`은 대조되는 개념이 아니다."
+
+``` python
+객체 지향은 '기존 절차 지향을 기반'으로 두고 보완하기 위해 '객체라는 개념을 도입'해 '상속', '코드 재사용성', '유지 보수성' 등의 이점을 가지는 패러다임
+```
