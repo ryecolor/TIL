@@ -238,17 +238,152 @@ print(D.mro())
 <br>
 <br>
 
-### 2) 내장 함수 `super()` ----- 여기부터 수정
+### 2) 내장 함수 `super()`
 ---
 
-> `클래스 Class` (= 데이터 타입​)
+> `super()`
 
-- 파이썬에서 `타입`을 표현하는 방법
+- 부모 클래스 객체를 반환하는 내장 함수
 
-- 객체를 생성하기 위한 설계도
+- 현재 클래스가 상속하는 모든 부모 클래스 중 다음에 호출될 메서드를 결정하여 자동 호출
 
-- 데이터와 기능을 함께 묶는 방법을 제공
+<br>
 
+> 단일 상속 구조
+
+- 명시적으로 이름을 지정하지 않고, 부모 클래스를 참조하여 코드의 유지 관리 용이
+
+- 클래스 이름이 변경되거나 부모 클래스가 교체되어도 super()를 사용하면 코드 수정 적음
+
+<br>
+
+> 다중 상속 구조
+
+- MRO를 따른 메서드 호출
+
+- 복잡한 다중 상속 구조에서 발생할 수 있는 문제를 방지
+
+<br>
+
+``` python
+# super 사용 전
+class Person:
+    def __init__(self, name, age, number, email):
+        self.name = name
+        self.age = age
+        self.number = number
+        self.email = email
+
+
+class Student(Person):
+    def __init__(self, name, age, number, email, student_id):
+        self.name = name
+        self.age = age
+        self.number = number
+        self.email = email
+        self.student_id = student_id
+
+
+# super 사용 예시 - 단일 상속
+class Person:
+    def __init__(self, name, age, number, email):
+        self.name = name
+        self.age = age
+        self.number = number
+        self.email = email
+
+class Student(Person):
+    def __init__(self, name, age, number, email, student_id, gpa):
+        super().__init__(name, age, number, email)
+        self.student_id = student_id
+        self.gpa = gpa
+
+
+# super 사용 예시 - 다중 상속
+class ParentA:
+    def __init__(self):
+        self.value_a = 'ParentA'
+
+    def show_value(self):
+        print(f'Value from ParentA: {self.value_a}')
+
+
+class ParentB:
+    def __init__(self):
+        self.value_b = 'ParentB'
+
+    def show_value(self):
+        print(f'Value from ParentB: {self.value_b}')
+
+
+class Child(ParentA, ParentB): # class Child는 인스턴스 변수 2개를 가짐
+    def __init__(self):
+        super().__init__()
+        self.value_c = 'Child'
+
+child1 = Child()
+print(child1.value_a) # 상속받은 __init__에서 얻은 인스턴스 변수
+print(child1.value_c) # 본래 class Child가 가지고 생긴 인스턴스 변수
+print(child1.value_b) # AttributeError: 'Child' object has no attribute 'value_b'
+```
+
+<br>
+
+> 상속 이후 메서드 사용 예시
+
+``` python
+# 자식 클래스에서 부모 클래스의 클래스 메서드 호출하기
+
+
+class Animal:
+    total_count = 0
+
+    def __init__(self, name):
+        self.name = name
+        Animal.total_count += 1
+
+    @classmethod
+    def get_total_count(cls):
+        return f'전체 동물 수: {cls.total_count}'
+
+
+class Dog(Animal):
+    dog_count = 0
+
+    def __init__(self, name, breed):
+        super().__init__(name)
+        self.breed = breed
+        Dog.dog_count += 1
+
+    @classmethod
+    def get_dog_info(cls):
+        # cls.get_total_count()는 부모 클래스의 클래스 메서드를 호출하여 전체 동물 수를 출력
+        return f'{cls.get_total_count()}, 강아지 수: {cls.dog_count}'
+
+
+class Cat(Animal):
+    cat_count = 0
+
+    def __init__(self, name, breed):
+        super().__init__(name)
+        self.breed = breed
+        Cat.cat_count += 1
+
+    @classmethod
+    def get_cat_info(cls):
+        # cls.get_total_count()는 부모 클래스의 클래스 메서드를 호출하여 전체 동물 수를 출력
+        return f'{cls.get_total_count()}, 고양이 수: {cls.cat_count}'
+
+
+dog1 = Dog('멍멍이', '삽살개')
+dog2 = Dog('바둑이', '진돗개')
+print(Dog.get_dog_info())  # 출력: 전체 동물 수: 2, 강아지 수: 2
+
+
+cat1 = Cat('노아', '페르시안')
+cat2 = Cat('루비', '코숏')
+print(Cat.get_cat_info())  # 출력: 전체 동물 수: 4, 고양이 수: 2
+```
 
 <br>
 <br>
@@ -256,27 +391,283 @@ print(D.mro())
 
 ### 3) `에러`와 `예외`
 ---
-클래스를 정의하기 위해서는 가장 먼저 `class` 키워드를 사용한다. 또한 다른 함수 정의와 구분하기 위해 `Pascal Case` 방식으로 클래스명을 작성한다.
-
-``` python
-'Pascal Case 방식': 대문자로 시작하며, snake_case의 underscore 대신 다시 대문자를 사용 (= Upper Camel Case)
-```
+우리는 흔히 소프트웨어에서 발생하는 오류 또는 결함, 즉 프로그램의 예상된 동작과 실제 동작 사이의 불일치에 대해 `버그 bug`라고 한다. 그리고 소프트웨어에서 발생하는 버그를 찾아내고 수정하는 과정을 가리켜 `디버깅 Debugging`이라고 하며, 이와 같은 프로그램의 오작동 원인을 식별하여 수정하는 작업에는 다양한 방법이 존재한다.
 
 <br>
 
-> 클래스 정의
+- `Print 함수` 활용
+
+    - 특정 함수 결과, 반복/조건 결과 등 나눠서 생각
+    - 코드를 bisection으로 나눠서 생각
+
+- `개발 환경(text editor, IDE 등)에서 제공하는 기능` 활용
+
+    - breakpoint, 변수 조회 등
+
+- `Python tutor` 활용
+
+    - 단순 파이썬 코드인 경우
+
+- 뇌 컴파일, 눈 디버깅 등
+
+<br>
+
+### ✔ 에러 `Error`
+---
+프로그램 실행 중에 발생하는 예외 상황
+
+
+> 문법 에러 Syntax Error
+
+- 프로그램의 구문이 올바르지 않은 경우 발생
+
+- 오타, 괄호 및 콜론 누락 등의 문법적 오류
+
+    - invalid syntax (문법 오류)
+    - assign to literal (잘못된 할당)
+    - EOL (End of Line)
+    - EOF (End of File)
+
+> 예외 Exception
+
+- 프로그램 실행 중에 감지되는 에러
+
+- 내장 예외 `Built-in Exceptions`
+
+    ``` python
+    파이썬 내에는 예외 상황을 나타내는 예외 '클래스'들이 이미 정의되어 있다. 이들은 특정 예외 상황에 대한 처리를 위해 사용되며, 클래스이기 때문에 상속이 가능하여 '계층 구조'가 존재할 수 있다.
+    ```
+
+    - `ZeroDivisionError` (나누기 또는 모듈로 연산의 두 번째 인자가 0일 때)
+
+    - `NameError` (지역 또는 전역 이름을 찾을 수 없을 때)
+
+    - `TypeError` (타입 불일치, 인자 누락 및 초과, 인자 타입 불일치)
+
+    - `ValueError` (부적절한 값의 인자를 받거나, IndexError처럼 구체적 설명 불가한 경우)
+
+    - `IndexError` (시퀀스 인덱스가 범위를 벗어날 때 발생)
+
+    - `KeyError` (딕셔너리에 해당 키가 존재하지 않는 경우)
+
+    - `ModuleNotFoundError` (모듈을 찾을 수 없을 때)
+
+    - `ImportError` (모듈은 있으나 import하려는 이름을 찾을 수 없을 때)
+
+    - `KeyboardInterrupt` (사용자가 Control-C 또는 Delete를 누를 때)
+
+    - `IndentationError` (잘못된 들여쓰기와 관련된 문법 오류)
+
 
 <br>
 <br>
 
 ### 4) 예외 처리: `try` - `except`
 ---
+파이썬에는 앞서 설명한 예외가 발생했을 때 프로그램이 비정상적으로 종료되지 않고, 적절하게 처리할 수 있도록 하는 `예외 처리 Exception Handling` 구문이 존재한다.
 
-### ✔ 인스턴스 메서드 `Instance Methods`
----
+<br>
 
-- 핵심 요약
+> 예외 처리 사용 구문
 
-> Most Common
+- `try`
 
-> Must have self parameter
+    - 예외가 발생할 수 있는 코드 작성
+
+- `except`
+
+    - 예외가 발생했을 때 실행할 코드 작성
+
+- `else`
+
+    - 예외가 발생하지 않았을 때 실행할 코드 작성
+
+- `finally`
+
+    - 예외 발생 여부와 상관없이 항상 실행할 코드 작성
+
+<br>
+
+> `try - except` 구조
+
+- try 블록 안에는 예외가 발생할 수 있는 코드 작성
+
+- except 블록 안에는 예외가 발생했을 때 처리할 코드 작성
+
+- 예외가 발생 시 프로그램은 try 블록을 빠져나와 해당 예외에 대응하는 except 블록으로 이동
+
+<br>
+
+``` python
+try:
+    result = 10 / 0
+except ZeroDivisionError: # 이렇게만 쓰는 경우에는 except: 라고만 써도 가능
+    print('0으로 나눌 수 없습니다.')
+
+try:
+    num = int(input('숫자 입력: '))
+except ValueError:
+    print('숫자가 아닙니다.')
+```
+
+<br>
+
+> 복수 예외 처리 예시
+
+``` python
+try:
+    num = int(input('100을 나눌 값을 입력하시오: '))
+    print(100 / num)
+except (ValueError, ZeroDivisionError):
+    print('제대로 입력하라고')
+
+
+try:
+    num = int(input('100을 나눌 값을 입력하시오: '))
+    print(100 / num)
+except ValueError:
+    print('숫자를 입력해')
+except ZeroDivisionError:
+    print('0으로는 나눌 수 없어')
+except:
+    print('알 수 없는 에러가 발생했습니다.')
+```
+
+<br>
+
+> `else & finally`
+
+``` python
+try:
+    x = int(input('숫자를 입력하세요: '))
+    y = 10 / x
+except ZeroDivisionError:
+    print('0으로 나눌 수 없습니다.')
+except ValueError:
+    print('유효한 숫자가 아닙니다.')
+else:
+    print(f'결과: {y}')
+finally:
+    print('프로그램이 종료되었습니다.')
+```
+
+<br>
+
+> 예외 처리 주의사항
+
+- 내장 예외의 상속 계층 구조 주의
+
+    - 내장 예외 클래스는 상속 계층 구조를 가지기 때문에 except 절로 분기 시 `반드시 하위 클래스를 먼저 확인`할 수 있도록 작성해야 함
+
+    - 참고 자료
+
+        [python 공식 문서 - 내장 예외](https://docs.python.org/ko/3/library/exceptions.html#exception-hierarchy)
+
+
+
+    - 문제 상황 예제
+        ``` python
+        try: # 문제 상황
+            num = int(input('100으로 나눌 값을 입력하시오 : '))
+            print(100 / num)
+        except BaseException:
+            print('숫자를 넣어주세요.')
+        except ZeroDivisionError:
+            print('0으로 나눌 수 없습니다.')
+        except:
+            print('에러가 발생하였습니다.')
+
+
+        try: # 해결
+            num = int(input('100으로 나눌 값을 입력하시오 : '))
+            print(100 / num)
+        except ZeroDivisionError:
+            print('0으로 나눌 수 없습니다.')
+        except BaseException:
+            print('숫자를 넣어주세요.')
+        except:
+            print('에러가 발생하였습니다.')
+        ```
+
+    - 위와 같이 작성하면 코드는 2번째 except 절에 이후로 도달하지 못함
+
+    - BaseException 클래스의 하위 클래스 중 하나인 ZeroDivisionError 클래스에 대한 except 절을 실행하기 위해서는 스크립트 내에 ZeroDivisionError를 먼저 작성해야 함
+
+<br>
+
+> 예외 객체 다루기: `키워드 as`
+
+- `예외 객체` : 예외가 발생했을 때 예외에 대한 정보를 담고 있는 객체
+
+- except 블록에서 예외 객체를 받아 상세한 예외 정보를 활용 가능
+
+    ``` python
+    my_list = []
+
+    try:
+        number = my_list[1]
+    except IndexError as error:
+        # list index out of range가 발생했습니다.
+        print(f'{error}가 발생했습니다.')
+    ```
+
+<br>
+
+> `try - except`와 `if - else`
+
+- 함께 사용 가능한 구문임을 기억
+
+    ``` python
+    try:
+    x = int(input('숫자를 입력하세요: '))
+    if x < 0:
+        print('음수는 허용되지 않습니다.')
+    else:
+        print('입력한 숫자:', x)
+    except ValueError:
+        print('오류 발생')
+    ```
+
+<br>
+
+> `EAFP` & `LBYL`
+
+- 예외 처리와 값 검사에 대한 2가지 접근 방식
+
+- `EAFP(Easier to Ask for Forgivenesss than Permission)`
+
+    - 예외 처리를 중심으로 코드를 작성하는 접근 방식 (try - except)
+
+- `LBYL(Look Before You Leap)`
+
+    - 값 검사를 중심으로 코드를 작성하는 접근 방식 (if - else)
+
+<br>
+
+| EAFP | LBYL |
+| :-----: | :---: |
+| `일단 실행`하고 예외를 처리 | 실행하기 전에 `조건을 검사` |
+| 코드를 실행하고 예외가 발생하면 예외 처리를 수행 | 코드 실행 전에 조건문 등을 사용하여 예외 상황을 미리 검사하고, 예외 상황을 피하는 방식 |
+| 코드에서 예외가 발생할 수 있는 부분을 미리 예측하여 대비하는 것이 아니라, `예외가 발생한 후에 예외를 처리` | 코드가 좀 더 `예측 가능한 동작`을 하지만, 코드가 더 길고 복잡해질 수 있음 | 
+| 예외 상황을 `예측하기 어려운 경우`에 유용 | 예외 상황을 `미리 방지하고 싶을 때` 유용 | 
+
+<br>
+
+``` python
+my_dict = {'key': 'value'}
+
+# EAFP (Easier to Ask for Forgiveness than Permission)
+try:
+    result = my_dict['key']
+    print(result)
+except KeyError:
+    print('Key가 존재하지 않습니다.')
+
+
+# LBYL (Look Before You Leap)
+if 'key' in my_dict:
+    result = my_dict['key']
+    print(result)
+else:
+    print('Key가 존재하지 않습니다.')
+```
