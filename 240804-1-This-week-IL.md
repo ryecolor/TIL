@@ -1,9 +1,6 @@
 # APS(Algorithm Problem Solving)
 ### Array 1.
 
-[Python SW문제해결 기본](swexpertacademy.com)
-(without Linked List)
-
 <br>
 
 > 과정 소개
@@ -455,6 +452,8 @@ for i in range(N-1, -1, -1): # N-1에서 0까지
         num //= 10 # 이제 num은 10으로 나눈 몫 (1의 자리 숫자 제외)
     ```
     ``` python
+    # 중복 방지를 위해 triplet 먼저 찾기
+
     i = 0
     tri = 0
     run = 0
