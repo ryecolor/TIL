@@ -511,7 +511,7 @@ def binarySearch2(a, low, high, key):
 
     - 기준 위치가 한 칸 뒤로 밀림 *기준 위치의 범위는 (0 -> n-2)
 
-    - 맨 앞이 최소값이라 가정하고, min_idx = 1로 시작
+    - 맨 앞이 최솟값이라 가정하고, min_idx = 1로 시작
 
     - 차례대로 접근하여 if a[min_idx] > a[i]: min_idx = i 작업 반복
 
@@ -519,7 +519,7 @@ def binarySearch2(a, low, high, key):
 
 - 시간 복잡도
 
-    - O(n2)
+    - O(n**2)
     
     - 장점: 쉬운 코드
     
